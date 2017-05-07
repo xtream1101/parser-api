@@ -157,7 +157,7 @@ def check_url(test_url):
             # Something went wrong
             return rdata
 
-        rdata['matched'] = True
+        rdata['valid_tld'] = True
 
         raw_parts = raw_parts.groupdict()
         rdata['parts']['protocol'] = raw_parts.get('protocol')
