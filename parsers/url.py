@@ -6,7 +6,7 @@ import urllib.request
 logger = logging.getLogger(__name__)
 
 tld_file = './resources/tld_list.txt'
-re_parse_args = re.compile('(?:(?P<arg>\w+)=?(?P<value>\w*))')
+re_parse_args = re.compile('(?:(?P<arg>\w+)=?(?P<value>[^&]*))')
 
 
 def load_tld_list():
@@ -128,7 +128,7 @@ def _parse_args(raw_args):
 
 def check_url(test_url):
     rdata = {'input': test_url,
-             'matched': False,
+             'valid_tld': False,
              'parts': {'protocol': None,
                        'username': None,
                        'password': None,
