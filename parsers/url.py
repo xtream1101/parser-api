@@ -33,7 +33,7 @@ def _get_suffix_list(source):
                         suffix_list.append(line.lower())
             break
         except FileNotFoundError:
-            load_tld_list()
+            _load_tld_list()
 
     return suffix_list
 
