@@ -113,6 +113,9 @@ def _parse_args(raw_args):
         tmp_arg, tmp_val = result
         if tmp_arg not in arg_dict:
             # Create new key and set the value
+            if tmp_val == '':
+                tmp_val = True
+
             arg_dict[tmp_arg] = tmp_val
 
         elif isinstance(arg_dict[tmp_arg], str):
@@ -133,12 +136,12 @@ def check_url(test_url):
                        'username': None,
                        'password': None,
                        'hash': None,
-                       'subdomains': [],
+                       'subdomains': None,
                        'rootdomain': None,
                        'suffix': None,
                        'port': None,
                        'endpoint': None,
-                       'args': [],
+                       'args': None,
                        },
              }
 
@@ -169,9 +172,12 @@ def check_url(test_url):
         rdata['parts']['port'] = raw_parts.get('port')
         rdata['parts']['endpoint'] = raw_parts.get('endpoint')
 
-        if raw_parts.get('subdomains') is not None:
+        if raw_parts['subdomains'] is not None:
             # Convert subdomians to a list
-            rdata['parts']['subdomains'] = raw_parts['subdomains'].split('.')
+            if '.' in raw_parts['subdomains']:
+                rdata['parts']['subdomains'] = raw_parts['subdomains'].split('.')
+            else:
+                rdata['parts']['subdomains'] = raw_parts['subdomains']
 
         if raw_parts.get('args') is not None:
             rdata['parts']['args'] = _parse_args(raw_parts['args'])
