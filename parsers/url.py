@@ -5,7 +5,7 @@ import urllib.request
 
 logger = logging.getLogger(__name__)
 
-tld_file = './resources/tld_list.txt'
+tld_file = './resources/tld_list.dat'
 re_parse_args = re.compile('(?:(?P<arg>\w+)=?(?P<value>[^&]*))')
 
 
@@ -27,6 +27,27 @@ def _get_suffix_list(source):
                 for line in lines:
                     line = line.strip()
                     if not line.startswith('#'):
+                        suffix_list.append(line.lower())
+            break
+        except FileNotFoundError:
+            load_tld_list()
+
+    return suffix_list
+
+
+def _get_suffix_list_dat(source):
+    suffix_list = []
+    logger.info("_get_suffix_list")
+    for _ in range(2):
+        try:
+            with open(source, 'r') as list_file:
+                lines = list_file.readlines()
+                for line in lines:
+                    line = line.strip()
+                    if line == '// ===END ICANN DOMAINS===':
+                        break
+
+                    if not line.startswith('//'):
                         suffix_list.append(line.lower())
             break
         except FileNotFoundError:
@@ -189,4 +210,4 @@ def check_url(test_url):
 
 
 # Get list of data
-_global_suffix_list = _get_suffix_list(tld_file)
+_global_suffix_list = _get_suffix_list_dat(tld_file)
