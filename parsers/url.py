@@ -9,33 +9,15 @@ tld_file = './resources/tld_list.dat'
 re_parse_args = re.compile('(?:(?P<arg>\w+)=?(?P<value>[^&]*))')
 
 
-def load_tld_list():
+def _load_tld_list():
     logger.info("load_tld_list")
 
-    tld_list_url = 'http://data.iana.org/TLD/tlds-alpha-by-domain.txt'
+    tld_list_url = 'https://publicsuffix.org/list/public_suffix_list.dat'
     with urllib.request.urlopen(tld_list_url) as response, open(tld_file, 'wb') as out_file:
         shutil.copyfileobj(response, out_file)
 
 
 def _get_suffix_list(source):
-    suffix_list = []
-    logger.info("_get_suffix_list")
-    for _ in range(2):
-        try:
-            with open(source, 'r') as list_file:
-                lines = list_file.readlines()
-                for line in lines:
-                    line = line.strip()
-                    if not line.startswith('#'):
-                        suffix_list.append(line.lower())
-            break
-        except FileNotFoundError:
-            load_tld_list()
-
-    return suffix_list
-
-
-def _get_suffix_list_dat(source):
     suffix_list = []
     logger.info("_get_suffix_list")
     for _ in range(2):
@@ -208,6 +190,7 @@ def check_url(test_url):
 
     return rdata
 
-
+# Update list on start
+_load_tld_list()
 # Get list of data
-_global_suffix_list = _get_suffix_list_dat(tld_file)
+_global_suffix_list = _get_suffix_list(tld_file)
